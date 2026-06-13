@@ -153,6 +153,86 @@
       margin-top: 2px;
     }
 
+    .prompt-section {
+      background: #1a1a2e;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+
+    .prompt-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 22px 28px 18px;
+    }
+
+    .prompt-header .section-icon {
+      background: rgba(20, 189, 172, 0.18);
+    }
+
+    .prompt-header h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .prompt-header p {
+      font-size: 0.82rem;
+      color: #b8c0cc;
+      margin-top: 2px;
+    }
+
+    .prompt-body {
+      padding: 0 28px 24px;
+    }
+
+    .prompt-box {
+      position: relative;
+      background: #11111f;
+      border: 1px solid #2a2a44;
+      border-radius: 12px;
+      padding: 20px 20px 20px;
+    }
+
+    .prompt-box pre {
+      font-family: "SF Mono", "Fira Code", Consolas, Menlo, monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: #e6e6ef;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+    }
+
+    .prompt-box .placeholder { color: #14bdac; font-weight: 600; }
+
+    .copy-btn {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: #14bdac;
+      color: #0d2624;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .copy-btn:hover { background: #19d4c0; }
+    .copy-btn.copied { background: #2ecc71; color: #fff; }
+
+    .prompt-tip {
+      font-size: 0.8rem;
+      color: #b8c0cc;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+
     footer {
       background: #fff;
       border-top: 1px solid #e8ecf0;
@@ -185,6 +265,46 @@
 
   <div class="intro-card">
     <p>Please read this Privacy Policy carefully before using [App Name]. By using the app you acknowledge that you have read and understood the terms described below.</p>
+  </div>
+
+  <!-- Plug-and-play prompt for students -->
+  <div class="prompt-section">
+    <div class="prompt-header">
+      <div class="section-icon">🤖</div>
+      <div>
+        <h2>Generate Your Own Privacy Page</h2>
+        <p>Copy this prompt, replace the highlighted parts with your app's details, and paste it into an AI assistant.</p>
+      </div>
+    </div>
+    <div class="prompt-body">
+      <div class="prompt-box">
+        <button class="copy-btn" id="copyBtn">Copy</button>
+        <pre id="promptText">You are helping me write a privacy policy and disclaimer page for my app.
+
+Here are the details of my app:
+- App name: <span class="placeholder">[your app name]</span>
+- What the app does: <span class="placeholder">[one or two sentences describing your app]</span>
+- Who uses it: <span class="placeholder">[e.g. students, general public, adults, minors]</span>
+- Account types and what info each needs: <span class="placeholder">[e.g. username only, or email + password]</span>
+- Does it use the camera, microphone, or location? <span class="placeholder">[yes/no — and when/why]</span>
+- What user data is stored, and where: <span class="placeholder">[e.g. profile, photos, scores — stored in Firebase / my own server]</span>
+- Any content users upload or submit: <span class="placeholder">[describe it, who can see it, how long it's kept]</span>
+- Third-party services used: <span class="placeholder">[e.g. Google Firebase, an AI API, maps]</span>
+- Does it generate AI content? <span class="placeholder">[yes/no]</span>
+- How a user deletes their account and data: <span class="placeholder">[describe the steps]</span>
+- Developer name: <span class="placeholder">[your name]</span>
+- Company / organisation: <span class="placeholder">[company name or "independent project"]</span>
+- Contact email: <span class="placeholder">[your contact email]</span>
+
+Please write:
+1. A clear, honest Privacy Policy that covers each item above in plain language. Only describe data practices that are actually true for my app — do not invent features I didn't mention.
+2. A short Disclaimer section covering accuracy, intended purpose, and responsibility.
+3. A footer with the developer name, company, year, and contact email.
+
+Keep the tone simple and easy for a general audience to understand. Format it as a clean, single-file HTML page.</pre>
+      </div>
+      <p class="prompt-tip">💡 Tip: Be specific and only list things your app really does. A privacy policy should describe reality — if you say you collect something, make sure you actually do, and if you collect something, make sure you list it.</p>
+    </div>
   </div>
 
   <!-- Privacy Policy -->
@@ -335,6 +455,38 @@
   </div>
 
 </main>
+
+<script>
+  (function () {
+    var btn = document.getElementById('copyBtn');
+    var pre = document.getElementById('promptText');
+    btn.addEventListener('click', function () {
+      var text = pre.innerText;
+      function done() {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(function () {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 1800);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done).catch(fallback);
+      } else {
+        fallback();
+      }
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  })();
+</script>
 
 <footer>
   <p><strong>[App Name]</strong></p>
